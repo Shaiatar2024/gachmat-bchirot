@@ -1,0 +1,86 @@
+rules_version = '2';
+
+// Gachmat Bchirot — Firestore Security Rules
+//
+// Model: users/{uid}, config/system, parties/{partyId}, bonusQuestions/{id},
+//        bets/{uid} (ONE per user — one-shot bet, not weekly like nfl-betting-pool),
+//        results/final (admin-entered, no official results API exists),
+//        scores/{uid} (computed).
+//
+// Same admin pattern as nfl-betting-pool: custom auth claim `admin == true`,
+// set server-side by the setUserRole callable. Bet submission and score
+// computation are heavy/validated, so they run in callables/triggers via the
+// Admin SDK (which bypasses these rules) — these rules are the safety net,
+// not the primary gate, for those two collections.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      // request.auth.token.admin == true throws on a *list* query (not a single
+      // get) when the token has no `admin` claim at all — true for every
+      // non-admin user. Guard with `in` first so isAdmin() cleanly evaluates to
+      // false instead of erroring out the whole rule for regular players.
+      // (Same gotcha nfl-betting-pool's rules already paid for — see its
+      // firestore.rules for the original writeup.)
+      return signedIn() && ('admin' in request.auth.token) && request.auth.token.admin == true;
+    }
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // ---- users ----
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create: if isSelf(uid) && request.resource.data.role == 'user';
+      allow update: if isSelf(uid) && request.resource.data.role == resource.data.role;
+      allow delete: if isAdmin();
+    }
+
+    // ---- config/system: bet-lock time, scoring knobs (admin-tunable, no code change) ----
+    match /config/{doc} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ---- parties: the default-16 (+ any others) shown on the betting page ----
+    match /parties/{partyId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ---- bonus questions: admin authors the questions AND enters the correct answer ----
+    match /bonusQuestions/{questionId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ---- bets: one doc per user, editable until lock. Sum-to-120 / 0-or->=4
+    // validation needs a real sum over a map, which Firestore rules can't do
+    // cleanly — so writes go through the submitBet callable (Admin SDK,
+    // bypasses these rules) instead of direct client writes. ----
+    match /bets/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    // ---- results/final: certified mandate count, entered by hand (no official
+    // results API exists — mirrors how nfl-betting-pool handles results it
+    // can't fetch automatically). Public once entered: it's the real world
+    // outcome, not anyone's private data. ----
+    match /results/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---- scores: computed by a Cloud Function (Admin SDK) once results land.
+    // Public leaderboard is by nickname, so scores are publicly readable. ----
+    match /scores/{uid} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "gachmat-bchirot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "גחמת בחירות — public one-shot mandate-prediction game for Israel's Oct 27, 2026 Knesset election. Firebase, no money, bragging rights only.",
+  "scripts": {
+    "install:all": "npm install && npm --prefix web install && npm --prefix functions install",
+    "build:web": "npm --prefix web run build",
+    "build:functions": "npm --prefix functions run build",
+    "build": "npm run build:functions && npm run build:web",
+    "dev": "npm --prefix web run dev",
+    "emulators": "firebase emulators:start",
+    "test": "npm --prefix functions run test",
+    "deploy": "firebase deploy"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  }
+}
