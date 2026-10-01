@@ -96,3 +96,33 @@ User correctly flagged that the live app didn't match the approved prototype
 feature grid, how-it-works), leaderboard page (regular + live variants), FAQ
 page, poll "pulse" page, admin panel. All exist as full markup in the
 prototype — same porting approach as above applies when we get to them.
+
+## 2026-10-01 — Home page, leaderboard, and a real SMS bug fixed
+
+Re-seeded production with the corrected bonus-question data (fresh key, used
+once, deleted immediately after — same pattern as before).
+
+**Found and fixed the real phone sign-in bug** (not a code bug — a project
+config bug): the Firebase project's SMS region policy was "allow listed
+countries only" with an EMPTY allowlist, silently blocking SMS to every
+country including Israel. Fixed via the Identity Platform admin API —
+allowlisted `IL`. Separately hardened `AuthFlow.tsx` to surface the real
+Firebase error code on failure instead of a generic swallowed message, so the
+next failure (quota, bad number, anything) is diagnosable from the screen
+instead of a dead end.
+
+Added, ported from the prototype:
+- Home page (`pages/HomePage.tsx`) — hero with ballot-box SVG art,
+  feature-strip, how-it-works. Bet-lock countdown reads `config/system`.
+- Leaderboard (`pages/LeaderboardPage.tsx`) — real `scores` data, honest
+  empty state (not the prototype's fake demo names). "Live" election-night
+  tab is UI-only for now — reads the same collection as the regular tab,
+  since a real provisional-results flow doesn't exist yet.
+- Real routing (`react-router-dom`, already installed, finally used): `/`,
+  `/predict`, `/leaderboard`. Header has working nav links now.
+- `computeScores` denormalizes nickname onto each score doc so the
+  leaderboard never needs a client-side join.
+
+**Still not built**: FAQ page, poll "pulse" page, admin panel, mobile bottom
+nav bar (prototype has one for <650px, not added yet — desktop nav just
+disappears below that width right now with nothing replacing it).
