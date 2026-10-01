@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 
 function CheckIcon() {
@@ -14,6 +15,7 @@ function CheckIcon() {
 // as soon as a saved field is edited again.
 export function ProfilePage() {
   const { user, profile, updateProfile } = useAuth();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
   const [saved, setSaved] = useState(false);
@@ -41,6 +43,7 @@ export function ProfilePage() {
     if (!nicknameValid) return;
     await updateProfile({ name: name.trim(), nickname: nickname.trim() });
     setSaved(true);
+    setTimeout(() => navigate('/'), 600);
   }
 
   return (

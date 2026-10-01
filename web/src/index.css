@@ -192,14 +192,18 @@
      specifically so the page's own title overlaps where the chart already
      is, per the brief ("chart behind the title"). */
   .hero-full{
-    position:relative;min-height:560px;
+    position:relative;
+    aspect-ratio:1024/572; /* matches the source image exactly — cover never
+      needs to crop, so the building/box/chart stay at their real proportions
+      instead of getting zoomed in on wide screens (they did, badly) */
     background-size:cover;background-position:center;background-repeat:no-repeat;
   }
   .hero-full-card{
-    position:absolute;top:50%;right:32px;transform:translateY(-50%);
+    position:absolute;top:50%;right:6%;transform:translateY(-50%);
     background:rgba(255,255,255,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
     border-radius:var(--radius);box-shadow:var(--shadow-panel);
-    padding:32px 36px;max-width:440px;width:calc(100% - 64px);
+    padding:clamp(18px,3vw,32px) clamp(20px,3.5vw,36px);
+    width:34%;min-width:300px;max-width:440px;
   }
   .hero-full-card h1{font-size:38px;font-weight:900;line-height:1.1;margin-top:10px;}
   .hero-full-card p{margin-top:14px;font-size:16px;line-height:1.55;color:var(--muted-foreground);}
@@ -329,6 +333,9 @@
   .faq-item summary svg{width:18px;height:18px;color:var(--muted-foreground);transition:transform .18s;flex:none;}
   .faq-item[open] summary svg{transform:rotate(45deg);}
   .faq-item .answer{color:var(--muted-foreground);line-height:1.8;font-size:15px;padding-top:10px;}
+  ul.answer{margin:0;padding-inline-start:20px;list-style:disc;}
+  ul.answer li{margin-bottom:8px;}
+  ul.answer li:last-child{margin-bottom:0;}
 
   /* ---------- auth ---------- */
   .auth-shell{display:flex;align-items:center;justify-content:center;min-height:70vh;padding:24px 0;}
