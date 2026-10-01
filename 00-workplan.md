@@ -123,9 +123,10 @@ Added, ported from the prototype:
 - `computeScores` denormalizes nickname onto each score doc so the
   leaderboard never needs a client-side join.
 
-**Still not built**: FAQ page, poll "pulse" page, admin panel, mobile bottom
-nav bar (prototype has one for <650px, not added yet — desktop nav just
-disappears below that width right now with nothing replacing it).
+**Still not built**: mobile bottom nav bar (prototype has one for <650px,
+not added yet — desktop nav just disappears below that width right now with
+nothing replacing it), results entry, bonus-answer entry, party-list
+management (all explicitly deferred in the admin page too).
 
 ## 2026-10-01 — Phone sign-in still blocked: billing is required, not optional
 
@@ -143,3 +144,17 @@ Added, while waiting on that:
   `submitBet` alongside the scheduled `betLockAt`). Nobody has the admin
   role yet — that needs `setUserRole`, which needs Cloud Functions deployed,
   which needs the same Blaze upgrade.
+
+## 2026-10-01 — FAQ and Pulse pages
+
+Added `pages/FaqPage.tsx` (native `<details>` accordion, content ported
+verbatim from the prototype) and `pages/PulsePage.tsx` (two cards, both
+honestly empty — same as the prototype's own unwired state). Full nav is now
+in the header: home / my bet / leaderboard / pulse / FAQ, plus admin for
+admins.
+
+At this point every page from the approved prototype exists in the live app
+except the mobile bottom nav bar. Remaining real work is backend-dependent:
+Blaze billing (blocks phone sign-in AND bet-saving/scoring), then results
+entry + bonus-answer entry + party-list management in the admin page, then
+the crowd-average Cloud Function for the Pulse page.
