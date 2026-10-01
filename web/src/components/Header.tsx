@@ -43,6 +43,12 @@ export function Header() {
           <NavLink to="/leaderboard" className={({ isActive }) => (isActive ? 'active' : '')}>
             טבלת המובילים
           </NavLink>
+          <NavLink to="/pulse" className={({ isActive }) => (isActive ? 'active' : '')}>
+            תמונת מצב
+          </NavLink>
+          <NavLink to="/faq" className={({ isActive }) => (isActive ? 'active' : '')}>
+            איך משחקים?
+          </NavLink>
           {profile?.role === 'admin' && (
             <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active' : '')}>
               ניהול

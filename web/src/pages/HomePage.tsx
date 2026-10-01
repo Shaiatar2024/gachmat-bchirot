@@ -119,8 +119,8 @@ export function HomePage() {
             <Link to="/predict" className="btn btn-primary btn-lg">
               בואו ננחש <ArrowIcon />
             </Link>
-            <Link to="/leaderboard" className="btn btn-outline btn-lg" style={{ background: 'transparent', borderColor: '#fff', color: '#fff' }}>
-              טבלת המובילים
+            <Link to="/faq" className="btn btn-outline btn-lg" style={{ background: 'transparent', borderColor: '#fff', color: '#fff' }}>
+              איך זה עובד
             </Link>
           </div>
         </div>
@@ -162,6 +162,9 @@ export function HomePage() {
         <div className="container">
           <div className="section-heading">
             <h2>איך משחקים</h2>
+            <Link to="/faq" className="link">
+              כל הכללים <ArrowIcon />
+            </Link>
           </div>
           <div className="how-grid">
             <div className="how-card">
