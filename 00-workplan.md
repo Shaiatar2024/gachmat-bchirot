@@ -126,3 +126,20 @@ Added, ported from the prototype:
 **Still not built**: FAQ page, poll "pulse" page, admin panel, mobile bottom
 nav bar (prototype has one for <650px, not added yet — desktop nav just
 disappears below that width right now with nothing replacing it).
+
+## 2026-10-01 — Phone sign-in still blocked: billing is required, not optional
+
+Correction to earlier notes: billing (Blaze) isn't just needed for Cloud
+Functions — Google requires it before sending ANY real phone-auth SMS at
+all (confirmed via the exact error `auth/billing-not-enabled` when a real
+user tried a real number). The SMS region-policy fix from earlier was real
+and necessary but not sufficient on its own. Google Sign-In is unaffected.
+**Blocker until user enables Blaze billing in the Firebase console.**
+
+Added, while waiting on that:
+- Admin page (`pages/AdminPage.tsx`, route `/admin`, gated on
+  `profile.role === 'admin'`) — bonus-question add/delete, scoring-config
+  editing, and a manual lock override (`config/system.locked`, checked by
+  `submitBet` alongside the scheduled `betLockAt`). Nobody has the admin
+  role yet — that needs `setUserRole`, which needs Cloud Functions deployed,
+  which needs the same Blaze upgrade.
