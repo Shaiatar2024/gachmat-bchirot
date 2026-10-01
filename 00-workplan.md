@@ -3,9 +3,9 @@ initiative: election-betting-2026
 status: active
 phase: 4-dev
 urgency: high
-next-action: "Create the real Firebase project (console.firebase.google.com), drop its web config into web/.env.local, run npm run install:all && npm run emulators:seed && npm run dev to see the betting page against seeded data. Then: bonus-questions UI, admin panel (party/results/config management), leaderboard page."
-blocker: "No live Firebase project yet — this repo has never been deployed or run against a real backend."
-last-reviewed: 2026-09-30
+next-action: "Seed real data (parties/config/bonus questions) into production Firestore — needs a service account key since firebase-admin does not share the firebase CLI login. Then: enable Blaze billing + deploy Cloud Functions so submitBet/computeScores actually work. Then: bonus-questions UI, admin panel, leaderboard page."
+blocker: "Cloud Functions (submitBet, computeScores, setUserRole) are not deployed yet — need the Blaze billing plan first. Site is live and auth works, but saving a bet will fail until then."
+last-reviewed: 2026-10-01
 description: "Code for גחמת בחירות. See the initiative-level workplan for product decisions: ../../00-workplan.md"
 ---
 
@@ -60,3 +60,13 @@ component, the "crowd average" and poll-snapshot context (user-stories 10–11).
 |------|----------|--------|
 | 2026-09-30 | New repo, public, under github.com/Shaiatar2024 (not a dedicated org like nfl-ghm) | user choice |
 | 2026-09-30 | Scaffold immediately and iterate the schema in place, rather than finishing a formal tech-spec first | user choice |
+
+## Deploy log
+
+| Date | What | Result |
+|------|------|--------|
+| 2026-10-01 | Real Firebase project created by user (`gachmat-bchirot`, Firestore in `me-west1`/Tel Aviv, Google + Phone auth enabled) | done |
+| 2026-10-01 | Deployed `firestore.rules` + `firestore.indexes.json` | done |
+| 2026-10-01 | Built and deployed `web/` to Firebase Hosting | **live**: https://gachmat-bchirot.web.app |
+| 2026-10-01 | Cloud Functions (`submitBet`, `computeScores`, `setUserRole`) | not deployed — needs Blaze billing plan first |
+| 2026-10-01 | Seed data (parties/config/bonus questions) into production | not done — needs a service account key (firebase-admin doesn't reuse the `firebase login` session) |
