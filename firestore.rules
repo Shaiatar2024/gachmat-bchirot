@@ -82,5 +82,13 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+
+    // ---- stats: aggregates computed by a Cloud Function (Admin SDK) from
+    // bets/* (which stays private — this is the only thing derived from it
+    // that's ever exposed, and only as an average, never anyone's actual bet). ----
+    match /stats/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }

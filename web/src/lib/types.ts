@@ -56,3 +56,10 @@ export interface UserProfile {
   role: 'user' | 'admin';
   createdAt: string;
 }
+
+export interface CrowdAverage {
+  /** partyId -> average seats across all submitted bets. */
+  averages: Record<string, number>;
+  sampleSize: number;
+  updatedAt: string;
+}

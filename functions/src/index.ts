@@ -9,3 +9,4 @@ setGlobalOptions({ region: 'me-west1' });
 export { setUserRole } from './callables/setUserRole.js';
 export { submitBet } from './callables/submitBet.js';
 export { computeScores } from './callables/computeScores.js';
+export { computeCrowdAverage } from './callables/computeCrowdAverage.js';
