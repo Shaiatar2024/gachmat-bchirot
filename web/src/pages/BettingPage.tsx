@@ -58,16 +58,19 @@ function PartyRow({
   party,
   value,
   onChange,
+  onChangeTyped,
+  onBlurTyped,
 }: {
   party: Party;
   value: number;
   onChange: (next: number) => void;
+  onChangeTyped: (next: number) => void;
+  onBlurTyped: () => void;
 }) {
   const numRef = useRef<HTMLInputElement>(null);
 
   function bump(delta: number) {
-    if (delta > 0) onChange(value === 0 ? 4 : value + 1);
-    else onChange(value <= 4 ? 0 : value - 1);
+    onChange(value + delta);
   }
 
   return (
@@ -89,7 +92,11 @@ function PartyRow({
             max={120}
             value={value}
             aria-label={`מספר מנדטים ל${party.name}`}
-            onChange={(e) => onChange(parseInt(e.target.value, 10) || 0)}
+            // Typing gets no live snapping (it would fight the user mid-keystroke,
+            // e.g. typing "12" would get force-corrected after the first "1") —
+            // only clamped to 0-120, with the 0-or-4+ rule applied on blur instead.
+            onChange={(e) => onChangeTyped(parseInt(e.target.value, 10) || 0)}
+            onBlur={onBlurTyped}
             onWheel={(e) => {
               if (document.activeElement !== numRef.current) return;
               e.preventDefault();
@@ -211,9 +218,35 @@ export function BettingPage() {
 
   const answeredCount = Object.keys(bonusAnswers).length;
 
-  function setSeat(partyId: string, value: number) {
-    setSeats((prev) => ({ ...prev, [partyId]: Math.max(0, Math.min(120, value)) }));
+  // Every control (steppers, the number box, the slider) funnels raw input
+  // through here, so the 0-or->=4 electoral-threshold rule (a party can't
+  // actually win 1-3 seats) is enforced once, consistently, instead of
+  // separately per control. Crossing into 1-3 snaps to whichever side the
+  // change was heading toward, matching the stepper buttons' jump behavior.
+  function setSeat(partyId: string, raw: number) {
+    setSeats((prev) => {
+      const previous = prev[partyId] ?? 0;
+      const clamped = Math.max(0, Math.min(120, Math.round(raw) || 0));
+      const snapped = clamped > 0 && clamped < 4 ? (clamped >= previous ? 4 : 0) : clamped;
+      return { ...prev, [partyId]: snapped };
+    });
     setSaveState('dirty');
+  }
+
+  // Typing: no live snap (so multi-digit entry like "12" doesn't get
+  // force-corrected after the first keystroke) — just clamp to the valid
+  // range. The 0-or-4+ rule gets applied once the field loses focus instead.
+  function setSeatTyped(partyId: string, raw: number) {
+    setSeats((prev) => ({ ...prev, [partyId]: Math.max(0, Math.min(120, Math.round(raw) || 0)) }));
+    setSaveState('dirty');
+  }
+
+  function commitTypedSeat(partyId: string) {
+    setSeats((prev) => {
+      const current = prev[partyId] ?? 0;
+      if (current > 0 && current < 4) return { ...prev, [partyId]: 4 };
+      return prev;
+    });
   }
 
   function setBonusAnswer(questionId: string, value: string | number) {
@@ -302,6 +335,8 @@ export function BettingPage() {
               party={party}
               value={seats[party.id] ?? 0}
               onChange={(v) => setSeat(party.id, v)}
+              onChangeTyped={(v) => setSeatTyped(party.id, v)}
+              onBlurTyped={() => commitTypedSeat(party.id)}
             />
           ))}
         </div>

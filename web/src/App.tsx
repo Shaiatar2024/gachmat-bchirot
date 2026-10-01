@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthProvider';
+import { Footer } from './components/Footer';
 import { Header } from './components/Header';
+import { MobileNav } from './components/MobileNav';
 import { AdminPage } from './pages/AdminPage';
 import { FaqPage } from './pages/FaqPage';
 import { HomePage } from './pages/HomePage';
@@ -24,6 +26,8 @@ export function App() {
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
+      <Footer />
+      <MobileNav />
     </>
   );
 }
