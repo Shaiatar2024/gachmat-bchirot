@@ -192,15 +192,16 @@
      specifically so the page's own title overlaps where the chart already
      is, per the brief ("chart behind the title"). */
   .hero-full{
-    position:relative;
-    aspect-ratio:1024/572; /* matches the source image exactly — cover never
-      needs to crop, so the building/box/chart stay at their real proportions
-      instead of getting zoomed in on wide screens (they did, badly) */
-    background-size:cover;background-position:center;background-repeat:no-repeat;
+    position:relative;min-height:480px;
+    background-color:#cae4f2; /* sampled from the illustration's own sky so the
+      inset graphic (shown small, per request) blends into the surrounding fill
+      with no visible seam */
+    background-image:url('/hero.jpg');
+    background-size:38% auto;background-position:left bottom;background-repeat:no-repeat;
   }
   .hero-full-card{
     position:absolute;top:50%;right:6%;transform:translateY(-50%);
-    background:rgba(255,255,255,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    background:rgba(255,255,255,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
     border-radius:var(--radius);box-shadow:var(--shadow-panel);
     padding:clamp(18px,3vw,32px) clamp(20px,3.5vw,36px);
     width:34%;min-width:300px;max-width:440px;
@@ -401,7 +402,7 @@
     .hero-content p{font-size:16px;}
     .hero{align-items:flex-end;}
     .hero-content{padding:28px 18px 32px;}
-    .hero-full{min-height:0;aspect-ratio:3/4;}
+    .hero-full{min-height:420px;background-size:60% auto;background-position:left top;}
     .hero-full-card{
       top:auto;bottom:16px;right:16px;left:16px;transform:none;
       max-width:none;width:auto;padding:22px 20px;

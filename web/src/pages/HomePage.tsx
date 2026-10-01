@@ -67,7 +67,7 @@ export function HomePage() {
 
   return (
     <main>
-      <section className="hero-full" style={{ backgroundImage: "url('/hero.jpg')" }} role="img" aria-label="קלפי של כנסת ישראל מול בניין הכנסת, עם גרפים של תוצאות">
+      <section className="hero-full" role="img" aria-label="קלפי של כנסת ישראל מול בניין הכנסת">
         <div className="hero-full-card">
           <span className="eyebrow">27 באוקטובר 2026 · הכנסת ה-26</span>
           <h1>אז כמה מנדטים הם יקבלו?</h1>
