@@ -67,8 +67,19 @@ export function HomePage() {
 
   return (
     <main>
-      <section className="hero-full" role="img" aria-label="קלפי של כנסת ישראל מול בניין הכנסת">
-        <div className="hero-full-card">
+      {/* Structure/classes/behavior per CLAUDE-HERO-IMPLEMENTATION.md — keep
+          in sync with that doc if this section changes again. */}
+      <section className="home-hero">
+        <img
+          className="home-hero__image"
+          src="/home-election-hero.jpg"
+          alt="קלפי מאוירת על רקע משכן הכנסת"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+        />
+        <div className="home-hero__overlay" aria-hidden="true" />
+        <div className="home-hero__content">
           <span className="eyebrow">27 באוקטובר 2026 · הכנסת ה-26</span>
           <h1>אז כמה מנדטים הם יקבלו?</h1>
           <p>מחלקים 120 מושבים בין המפלגות, עונים על כמה שאלות בונוס, ורואים מי צדק כשהתוצאות ייכנסו. בלי כסף, רק כבוד.</p>
@@ -79,9 +90,6 @@ export function HomePage() {
           <div className="hero-actions">
             <Link to="/predict" className="btn btn-primary btn-lg">
               בואו ננחש <ArrowIcon />
-            </Link>
-            <Link to="/faq" className="btn btn-outline btn-lg">
-              איך זה עובד
             </Link>
           </div>
         </div>
