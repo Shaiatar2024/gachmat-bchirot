@@ -3,7 +3,7 @@ initiative: election-betting-2026
 status: active
 phase: 4-dev
 urgency: high
-next-action: "Seed real data (parties/config/bonus questions) into production Firestore — needs a service account key since firebase-admin does not share the firebase CLI login. Then: enable Blaze billing + deploy Cloud Functions so submitBet/computeScores actually work. Then: bonus-questions UI, admin panel, leaderboard page."
+next-action: "Re-seed production Firestore with corrected bonus-question data (needs a fresh service account key — the last one was used once and deleted on purpose). Then: enable Blaze billing + deploy Cloud Functions so submitBet/computeScores actually work. Then: port the remaining prototype pages (home, leaderboard, FAQ, pulse, admin)."
 blocker: "Cloud Functions (submitBet, computeScores, setUserRole) are not deployed yet — need the Blaze billing plan first. Site is live and auth works, but saving a bet will fail until then."
 last-reviewed: 2026-10-01
 description: "Code for גחמת בחירות. See the initiative-level workplan for product decisions: ../../00-workplan.md"
@@ -70,3 +70,29 @@ component, the "crowd average" and poll-snapshot context (user-stories 10–11).
 | 2026-10-01 | Built and deployed `web/` to Firebase Hosting | **live**: https://gachmat-bchirot.web.app |
 | 2026-10-01 | Cloud Functions (`submitBet`, `computeScores`, `setUserRole`) | not deployed — needs Blaze billing plan first |
 | 2026-10-01 | Seed data (parties/config/bonus questions) into production | not done — needs a service account key (firebase-admin doesn't reuse the `firebase login` session) |
+
+## 2026-10-01 — Design rebuild
+
+User correctly flagged that the live app didn't match the approved prototype
+(it was a Tailwind-based reinterpretation, not a port). Rebuilt to match:
+
+- `index.css` now the prototype's actual CSS verbatim, not Tailwind utilities
+  (Tailwind removed from the project entirely — it was never the real design
+  tool here)
+- Auth flow (`auth/AuthFlow.tsx`) now matches the prototype exactly: entry →
+  phone OTP (6 boxes) → nickname step, Google button too. Dropped the
+  prototype's demo-only email/password tab (out of PRD scope)
+- `BettingPage.tsx` rebuilt with the real stepper+slider party controls,
+  search/reset toolbar, and bonus questions wired to live Firestore data
+- Fixed `seed.mjs`: "largest party" bonus question is now single-choice from
+  the real party list (was wrongly free-text); "winning bloc" options match
+  the prototype's wording — **production Firestore still has the OLD wrong
+  bonus-question data until re-seeded** (needs a fresh service account key,
+  see next-action)
+- Added a minimal header (brand + sign-out only — no nav to home/leaderboard/
+  pulse/FAQ, those pages don't exist yet)
+
+**Still not built** (prototype has these, live app doesn't): home page (hero,
+feature grid, how-it-works), leaderboard page (regular + live variants), FAQ
+page, poll "pulse" page, admin panel. All exist as full markup in the
+prototype — same porting approach as above applies when we get to them.
