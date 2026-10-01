@@ -201,3 +201,30 @@ session's private working folder — outside the repo, outside Downloads,
 order (verified by reading it back — correct). Reusable for future one-off
 admin writes in this session without asking again; user can ask to delete it
 or revoke it from the Firebase console's Service Accounts page any time.
+
+## 2026-10-01 — Admin page finished; Pulse crowd-average; LittlePolls on hold
+
+Admin page is now feature-complete for what doesn't need Cloud Functions:
+party management, combined results + bonus-answer entry, readiness
+overview, alongside the existing bonus-question CRUD, scoring config, and
+manual lock. Nobody can reach it yet — still waiting on Blaze → deploy
+functions → setUserRole to grant the first admin.
+
+Pulse page: crowd-average card now a real horizontal bar chart (backed by
+new computeCrowdAverage function + public stats/crowdAverage doc), reordered
+to sit on the right per user request, external polls card moved left.
+
+LittlePolls.com integration (daily poll pull) explicitly paused: their
+robots.txt disallows all automated access (`Disallow: /` for `User-agent: *`,
+only `facebookexternalhit` allowed). The underlying data is trivially
+parseable (clean JSON embedded in the page's HTML, keyed by a `window`
+param — no scraping tricks needed), but building this without the site
+owner's consent isn't something to do anyway. User is reaching out to them
+directly; resume only if they say yes, or they'd rather we just link out
+instead (the original PRD open question, never actually closed).
+
+User is doing the Blaze billing upgrade now — once done: deploy functions
+(submitBet, computeScores, computeCrowdAverage, setUserRole), grant the
+user's own account admin via setUserRole, then results entry → computeScores
+→ real leaderboard scores all become exercisable end to end for the first
+time.
