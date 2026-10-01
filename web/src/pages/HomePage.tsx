@@ -50,41 +50,6 @@ function TrophyIcon() {
   );
 }
 
-// Decorative ballot-box illustration from the approved prototype, ported
-// as-is (it's pure vector art, not something to reinterpret).
-function HeroArt() {
-  return (
-    <svg viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="קלפי ופתק הצבעה">
-      <defs>
-        <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.72 0.10 251)" />
-          <stop offset="100%" stopColor="oklch(0.55 0.16 251)" />
-        </linearGradient>
-        <linearGradient id="boxG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.42 0.13 251)" />
-          <stop offset="100%" stopColor="oklch(0.30 0.10 255)" />
-        </linearGradient>
-      </defs>
-      <rect width="1200" height="620" fill="url(#skyG)" />
-      <circle cx="980" cy="120" r="180" fill="#ffffff" opacity=".06" />
-      <circle cx="150" cy="480" r="260" fill="#ffffff" opacity=".05" />
-      <g transform="translate(650,190)">
-        <rect x="0" y="140" width="360" height="230" rx="10" fill="url(#boxG)" />
-        <rect x="-14" y="120" width="388" height="34" rx="8" fill="oklch(0.36 0.12 253)" />
-        <rect x="150" y="88" width="60" height="34" rx="6" fill="oklch(0.25 0.08 255)" />
-        <g transform="translate(150,-70) rotate(8)">
-          <rect x="0" y="0" width="120" height="170" rx="4" fill="#ffffff" />
-          <rect x="14" y="24" width="92" height="8" rx="4" fill="oklch(0.85 0.03 247)" />
-          <rect x="14" y="44" width="92" height="8" rx="4" fill="oklch(0.85 0.03 247)" />
-          <rect x="14" y="64" width="60" height="8" rx="4" fill="oklch(0.85 0.03 247)" />
-          <circle cx="26" cy="100" r="9" fill="none" stroke="oklch(0.59 0.19 251)" strokeWidth="3" />
-          <path d="M21 100l4 4 8-9" fill="none" stroke="oklch(0.59 0.19 251)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-      </g>
-    </svg>
-  );
-}
-
 export function HomePage() {
   const [config, setConfig] = useState<SystemConfig | null>(null);
 
@@ -102,12 +67,8 @@ export function HomePage() {
 
   return (
     <main>
-      <section className="hero">
-        <div className="hero-art">
-          <HeroArt />
-        </div>
-        <div className="hero-overlay" />
-        <div className="hero-content">
+      <section className="hero-split container">
+        <div className="hero-split-content">
           <span className="eyebrow">27 באוקטובר 2026 · הכנסת ה-26</span>
           <h1>אז כמה מנדטים הם יקבלו?</h1>
           <p>מחלקים 120 מושבים בין המפלגות, עונים על כמה שאלות בונוס, ורואים מי צדק כשהתוצאות ייכנסו. בלי כסף, רק כבוד.</p>
@@ -119,10 +80,13 @@ export function HomePage() {
             <Link to="/predict" className="btn btn-primary btn-lg">
               בואו ננחש <ArrowIcon />
             </Link>
-            <Link to="/faq" className="btn btn-outline btn-lg" style={{ background: 'transparent', borderColor: '#fff', color: '#fff' }}>
+            <Link to="/faq" className="btn btn-outline btn-lg">
               איך זה עובד
             </Link>
           </div>
+        </div>
+        <div className="hero-split-image">
+          <img src="/hero.jpg" alt="קלפי של כנסת ישראל מול בניין הכנסת, עם גרפים של תוצאות" />
         </div>
       </section>
 
