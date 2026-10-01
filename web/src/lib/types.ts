@@ -36,6 +36,7 @@ export interface Bet {
 
 export interface Score {
   uid: string;
+  nickname: string;
   totalScore: number;
   perParty: Record<string, number>;
   perBonus: Record<string, number>;

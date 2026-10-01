@@ -1,17 +1,23 @@
-import { AuthEntry, NicknameStep } from './auth/AuthFlow';
+import { Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthProvider';
 import { Header } from './components/Header';
-import { BettingPage } from './pages/BettingPage';
+import { HomePage } from './pages/HomePage';
+import { LeaderboardPage } from './pages/LeaderboardPage';
+import { PredictGate } from './pages/PredictGate';
 
 export function App() {
-  const { user, profile, loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) return null;
 
   return (
     <>
       <Header />
-      {!user ? <AuthEntry /> : !profile?.nicknameSet ? <NicknameStep /> : <BettingPage />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/predict" element={<PredictGate />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+      </Routes>
     </>
   );
 }

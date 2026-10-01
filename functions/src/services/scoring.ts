@@ -1,5 +1,7 @@
 import type { Bet, BonusQuestion, Results, Score, SystemConfig } from '../types.js';
 
+type ScoreWithoutNickname = Omit<Score, 'nickname'>;
+
 /**
  * "Shai Atar's Law" per-party scoring:
  *   exact match       -> points = actual seat count for that party
@@ -26,7 +28,7 @@ export function computeAllScores(
   parties: string[],
   bonusQuestions: Record<string, BonusQuestion>,
   config: SystemConfig
-): Score[] {
+): ScoreWithoutNickname[] {
   const exactCountByParty: Record<string, number> = {};
   for (const partyId of parties) exactCountByParty[partyId] = 0;
   for (const bet of bets) {

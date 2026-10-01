@@ -55,9 +55,20 @@ export interface Results {
 
 export interface Score {
   uid: string;
+  // Denormalized at write time (scores/{uid} is publicly readable for the
+  // leaderboard, but users/{uid} isn't) so the client never has to join.
+  nickname: string;
   totalScore: number;
   perParty: Record<string, number>;
   perBonus: Record<string, number>;
   rarityBonusParties: string[];
   perfectBonusApplied: boolean;
+}
+
+export interface UserProfile {
+  uid: string;
+  nickname: string;
+  nicknameSet: boolean;
+  role: 'user' | 'admin';
+  createdAt: string;
 }
