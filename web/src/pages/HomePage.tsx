@@ -67,8 +67,8 @@ export function HomePage() {
 
   return (
     <main>
-      <section className="hero-split container">
-        <div className="hero-split-content">
+      <section className="hero-full" style={{ backgroundImage: "url('/hero.jpg')" }} role="img" aria-label="קלפי של כנסת ישראל מול בניין הכנסת, עם גרפים של תוצאות">
+        <div className="hero-full-card">
           <span className="eyebrow">27 באוקטובר 2026 · הכנסת ה-26</span>
           <h1>אז כמה מנדטים הם יקבלו?</h1>
           <p>מחלקים 120 מושבים בין המפלגות, עונים על כמה שאלות בונוס, ורואים מי צדק כשהתוצאות ייכנסו. בלי כסף, רק כבוד.</p>
@@ -84,9 +84,6 @@ export function HomePage() {
               איך זה עובד
             </Link>
           </div>
-        </div>
-        <div className="hero-split-image">
-          <img src="/hero.jpg" alt="קלפי של כנסת ישראל מול בניין הכנסת, עם גרפים של תוצאות" />
         </div>
       </section>
 

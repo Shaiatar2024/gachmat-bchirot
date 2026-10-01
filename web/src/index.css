@@ -185,18 +185,27 @@
   .hero-actions{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap;}
   .hero-actions .btn-primary{background:#fff;color:var(--deep-blue);}
 
-  /* ---------- home hero, split image/text layout ---------- */
-  .hero-split{
-    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
-    padding-block:56px;
+  /* ---------- home hero, full-bleed image with an overlay card ----------
+     The supplied hero image already has the ballot-box + wordmark left-of-
+     center and the results chart on the right — the card sits on the
+     physical right (not RTL-logical "end", which would flip to the left)
+     specifically so the page's own title overlaps where the chart already
+     is, per the brief ("chart behind the title"). */
+  .hero-full{
+    position:relative;min-height:560px;
+    background-size:cover;background-position:center;background-repeat:no-repeat;
   }
-  .hero-split-content h1{font-size:46px;font-weight:900;line-height:1.08;margin-top:10px;}
-  .hero-split-content p{margin-top:16px;font-size:18px;line-height:1.55;color:var(--muted-foreground);max-width:46ch;}
-  .hero-split-content .hero-meta{display:flex;gap:18px;margin-top:22px;flex-wrap:wrap;align-items:center;}
-  .hero-split-content .hero-meta span{font-size:14px;color:var(--muted-foreground);display:flex;align-items:center;gap:6px;}
-  .hero-split-content .hero-actions{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap;}
-  .hero-split-image{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-panel);aspect-ratio:1/1;}
-  .hero-split-image img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-full-card{
+    position:absolute;top:50%;right:32px;transform:translateY(-50%);
+    background:rgba(255,255,255,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    border-radius:var(--radius);box-shadow:var(--shadow-panel);
+    padding:32px 36px;max-width:440px;width:calc(100% - 64px);
+  }
+  .hero-full-card h1{font-size:38px;font-weight:900;line-height:1.1;margin-top:10px;}
+  .hero-full-card p{margin-top:14px;font-size:16px;line-height:1.55;color:var(--muted-foreground);}
+  .hero-full-card .hero-meta{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;align-items:center;}
+  .hero-full-card .hero-meta span{font-size:13px;color:var(--muted-foreground);display:flex;align-items:center;gap:6px;}
+  .hero-full-card .hero-actions{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;}
 
   .feature-strip{background:var(--card);}
   .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:32px 0 4px;}
@@ -366,8 +375,7 @@
   @media (max-width:850px){
     .desktop-nav{gap:18px;}
     .admin-shell{grid-template-columns:1fr;}
-    .hero-split{grid-template-columns:1fr;padding-block:32px;}
-    .hero-split-image{order:-1;aspect-ratio:16/10;}
+    .hero-full-card{max-width:380px;}
   }
   @media (max-width:700px){
     .page-heading{flex-direction:column;align-items:flex-start;}
@@ -386,8 +394,13 @@
     .hero-content p{font-size:16px;}
     .hero{align-items:flex-end;}
     .hero-content{padding:28px 18px 32px;}
-    .hero-split-content h1{font-size:32px;}
-    .hero-split-content p{font-size:16px;}
+    .hero-full{min-height:0;aspect-ratio:3/4;}
+    .hero-full-card{
+      top:auto;bottom:16px;right:16px;left:16px;transform:none;
+      max-width:none;width:auto;padding:22px 20px;
+    }
+    .hero-full-card h1{font-size:28px;}
+    .hero-full-card p{font-size:15px;}
     .lb-header,.lb-row{grid-template-columns:40px 1fr 75px;}
     .app-footer .container{flex-direction:column;align-items:flex-start;}
   }
