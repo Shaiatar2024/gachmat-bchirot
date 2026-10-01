@@ -33,6 +33,13 @@ const PARTIES = [
   { id: 'ale-yarok', name: 'עלה ירוק', leader: 'ניר יופטרו' },
 ];
 
+// Display order is Hebrew alphabetical, not registration/polling order —
+// sorts PARTIES in place so both the seeded `order` field (used by the
+// betting page) and the "largest party" bonus-question options below follow
+// the same alphabetical order.
+const collator = new Intl.Collator('he');
+PARTIES.sort((a, b) => collator.compare(a.name, b.name));
+
 // "Largest party" offers the actual party list as choices, matching the
 // approved prototype (it showed an option-group of party names, not free
 // text). "Winning bloc" options match the prototype's exact wording.
