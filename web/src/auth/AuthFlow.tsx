@@ -48,6 +48,20 @@ function GoogleIcon() {
 
 type Step = 'entry' | 'otp';
 
+// Firebase's own error messages are English/technical — translate the ones
+// a real user can actually hit, and show the raw code for anything else so
+// a failure is reportable instead of a dead end ("it doesn't work").
+function describePhoneAuthError(e: unknown): string {
+  const code = e instanceof Error && 'code' in e ? String((e as { code: unknown }).code) : '';
+  if (code.includes('too-many-requests') || code.includes('quota-exceeded')) {
+    return 'יותר מדי נסיונות היום — נסו שוב מאוחר יותר';
+  }
+  if (code.includes('invalid-phone-number')) {
+    return 'מספר הטלפון לא תקין';
+  }
+  return `שליחת הקוד נכשלה (${code || 'שגיאה לא ידועה'}) — נסו שוב`;
+}
+
 export function AuthEntry() {
   const { signInWithGoogle, startPhoneSignIn, confirmPhoneCode } = useAuth();
   const [step, setStep] = useState<Step>('entry');
@@ -68,8 +82,9 @@ export function AuthEntry() {
       const result = await startPhoneSignIn(phone, 'recaptcha-container');
       setConfirmation(result);
       setStep('otp');
-    } catch {
-      setError('שליחת הקוד נכשלה, נסו שוב');
+    } catch (e) {
+      console.error('Phone sign-in failed:', e);
+      setError(describePhoneAuthError(e));
     }
   }
 
@@ -78,8 +93,9 @@ export function AuthEntry() {
     setError(null);
     try {
       await confirmPhoneCode(confirmation, fullCode);
-    } catch {
-      setError('הקוד שגוי');
+    } catch (e) {
+      console.error('OTP confirmation failed:', e);
+      setError(e instanceof Error && e.message.includes('invalid-verification-code') ? 'הקוד שגוי' : describePhoneAuthError(e));
     }
   }
 
