@@ -33,10 +33,25 @@ const PARTIES = [
   { id: 'ale-yarok', name: 'עלה ירוק', leader: 'ניר יופטרו' },
 ];
 
+// "Largest party" offers the actual party list as choices, matching the
+// approved prototype (it showed an option-group of party names, not free
+// text). "Winning bloc" options match the prototype's exact wording.
 const BONUS_QUESTIONS = [
-  { id: 'largest-party', text: 'איזו מפלגה תהיה הגדולה ביותר?', type: 'text', order: 0 },
-  { id: 'winning-bloc', text: 'איזה גוש ינצח?', type: 'single-choice', options: ['ימין', 'שמאל-מרכז'], order: 1 },
-  { id: 'turnout-pct', text: 'מה יהיה אחוז ההצבעה?', type: 'number', order: 2 },
+  {
+    id: 'largest-party',
+    text: 'איזו מפלגה תזכה במספר המנדטים הגדול ביותר?',
+    type: 'single-choice',
+    options: PARTIES.map((p) => p.name),
+    order: 0,
+  },
+  {
+    id: 'winning-bloc',
+    text: 'איזה גוש יזכה ברוב?',
+    type: 'single-choice',
+    options: ['גוש נתניהו', 'האופוזיציה הציונית', 'אף גוש לא יגיע ל-61'],
+    order: 1,
+  },
+  { id: 'turnout-pct', text: 'מה יהיה אחוז ההצבעה הכללי?', type: 'number', order: 2 },
 ];
 
 async function main() {

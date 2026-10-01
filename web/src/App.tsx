@@ -1,10 +1,17 @@
+import { AuthEntry, NicknameStep } from './auth/AuthFlow';
 import { useAuth } from './auth/AuthProvider';
+import { Header } from './components/Header';
 import { BettingPage } from './pages/BettingPage';
-import { LoginPage } from './pages/LoginPage';
 
 export function App() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   if (loading) return null;
-  return user ? <BettingPage /> : <LoginPage />;
+
+  return (
+    <>
+      <Header />
+      {!user ? <AuthEntry /> : !profile?.nicknameSet ? <NicknameStep /> : <BettingPage />}
+    </>
+  );
 }

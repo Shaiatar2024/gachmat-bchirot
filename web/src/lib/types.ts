@@ -42,3 +42,11 @@ export interface Score {
   rarityBonusParties: string[];
   perfectBonusApplied: boolean;
 }
+
+export interface UserProfile {
+  uid: string;
+  nickname: string;
+  nicknameSet: boolean;
+  role: 'user' | 'admin';
+  createdAt: string;
+}

@@ -8,9 +8,10 @@ import {
   type ConfirmationResult,
   type User,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { auth, db } from '../lib/firebase';
+import type { UserProfile } from '../lib/types';
 
 // Two sign-in methods per the PRD: Google (fast for people comfortable with
 // it) and phone/SMS OTP (for people who aren't) — not everyone in scope for
@@ -20,10 +21,12 @@ import { auth, db } from '../lib/firebase';
 
 interface AuthContextValue {
   user: User | null;
+  profile: UserProfile | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   startPhoneSignIn: (phoneNumber: string, containerId: string) => Promise<ConfirmationResult>;
   confirmPhoneCode: (confirmation: ConfirmationResult, code: string) => Promise<void>;
+  setNickname: (nickname: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -33,26 +36,41 @@ async function ensureUserProfile(user: User) {
   const ref = doc(db, 'users', user.uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
-    await setDoc(ref, {
+    const profile: UserProfile = {
       uid: user.uid,
-      nickname: user.displayName ?? 'שחקן חדש',
+      nickname: user.displayName ?? '',
+      nicknameSet: false,
       role: 'user',
       createdAt: new Date().toISOString(),
-    });
+    };
+    await setDoc(ref, profile);
   }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     return onAuthStateChanged(auth, (u) => {
       setUser(u);
-      setLoading(false);
+      if (!u) {
+        setProfile(null);
+        setLoading(false);
+      }
       if (u) void ensureUserProfile(u);
     });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+      if (snap.exists()) setProfile(snap.data() as UserProfile);
+      setLoading(false);
+    });
+    return unsub;
+  }, [user]);
 
   async function signInWithGoogle() {
     await signInWithPopup(auth, new GoogleAuthProvider());
@@ -67,13 +85,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await confirmation.confirm(code);
   }
 
+  async function setNickname(nickname: string) {
+    if (!user) return;
+    await updateDoc(doc(db, 'users', user.uid), { nickname, nicknameSet: true });
+  }
+
   async function signOut() {
     await firebaseSignOut(auth);
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signInWithGoogle, startPhoneSignIn, confirmPhoneCode, signOut }}
+      value={{
+        user,
+        profile,
+        loading,
+        signInWithGoogle,
+        startPhoneSignIn,
+        confirmPhoneCode,
+        setNickname,
+        signOut,
+      }}
     >
       {children}
     </AuthContext.Provider>
