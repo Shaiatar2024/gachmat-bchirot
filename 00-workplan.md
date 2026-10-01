@@ -191,3 +191,13 @@ DESIGN_GUIDELINES.md and later decisions, left as-is:
 
 Also re-sorted the seed data to Hebrew alphabetical order (not yet re-seeded
 into production — needs another one-time key, same pattern as before).
+
+## 2026-10-01 — Admin key kept on file (user's explicit choice)
+
+User asked to stop re-downloading a service account key every time. Key now
+lives at `scratchpad/secrets/gachmat-bchirot-admin-key.json` in this agent
+session's private working folder — outside the repo, outside Downloads,
+`chmod 600`. Used it to re-seed production with the Hebrew-alphabetical party
+order (verified by reading it back — correct). Reusable for future one-off
+admin writes in this session without asking again; user can ask to delete it
+or revoke it from the Firebase console's Service Accounts page any time.
