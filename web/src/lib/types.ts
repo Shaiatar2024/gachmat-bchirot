@@ -48,6 +48,9 @@ export interface Score {
 
 export interface UserProfile {
   uid: string;
+  /** Private — not shown on the leaderboard, just for the player's own profile. */
+  name: string;
+  /** Public — shown on the leaderboard. */
   nickname: string;
   nicknameSet: boolean;
   role: 'user' | 'admin';

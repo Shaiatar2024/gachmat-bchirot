@@ -8,6 +8,7 @@ import { FaqPage } from './pages/FaqPage';
 import { HomePage } from './pages/HomePage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { PredictGate } from './pages/PredictGate';
+import { ProfilePage } from './pages/ProfilePage';
 import { PulsePage } from './pages/PulsePage';
 
 export function App() {
@@ -25,6 +26,7 @@ export function App() {
         <Route path="/pulse" element={<PulsePage />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       <Footer />
       <MobileNav />

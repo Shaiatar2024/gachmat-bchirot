@@ -58,9 +58,13 @@ export function Header() {
         <div className="header-actions">
           {user && profile ? (
             <>
-              <span className="helper" style={{ margin: 0 }}>
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => `link${isActive ? ' active' : ''}`}
+                style={{ fontSize: 14 }}
+              >
                 שלום, {profile.nickname}
-              </span>
+              </NavLink>
               <button className="btn btn-outline" onClick={() => void signOut()}>
                 התנתקות
               </button>

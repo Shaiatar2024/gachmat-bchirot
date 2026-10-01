@@ -27,6 +27,7 @@ interface AuthContextValue {
   startPhoneSignIn: (phoneNumber: string, containerId: string) => Promise<ConfirmationResult>;
   confirmPhoneCode: (confirmation: ConfirmationResult, code: string) => Promise<void>;
   setNickname: (nickname: string) => Promise<void>;
+  updateProfile: (fields: Partial<Pick<UserProfile, 'name' | 'nickname'>>) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -38,6 +39,7 @@ async function ensureUserProfile(user: User) {
   if (!snap.exists()) {
     const profile: UserProfile = {
       uid: user.uid,
+      name: user.displayName ?? '',
       nickname: user.displayName ?? '',
       nicknameSet: false,
       role: 'user',
@@ -90,6 +92,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updateDoc(doc(db, 'users', user.uid), { nickname, nicknameSet: true });
   }
 
+  async function updateProfile(fields: Partial<Pick<UserProfile, 'name' | 'nickname'>>) {
+    if (!user) return;
+    await updateDoc(doc(db, 'users', user.uid), fields);
+  }
+
   async function signOut() {
     await firebaseSignOut(auth);
   }
@@ -104,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         startPhoneSignIn,
         confirmPhoneCode,
         setNickname,
+        updateProfile,
         signOut,
       }}
     >
