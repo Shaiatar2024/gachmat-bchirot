@@ -158,3 +158,36 @@ except the mobile bottom nav bar. Remaining real work is backend-dependent:
 Blaze billing (blocks phone sign-in AND bet-saving/scoring), then results
 entry + bonus-answer entry + party-list management in the admin page, then
 the crowd-average Cloud Function for the Pulse page.
+
+## 2026-10-01 — Design audit against DESIGN_GUIDELINES.md, seat-snap bug fix
+
+User asked for an explicit check against DESIGN_GUIDELINES.md (not just the
+prototype). Real findings:
+
+- **Heebo was never loaded** — only named in the CSS fallback stack, no
+  `<link>` to Google Fonts anywhere. Every page had silently been rendering
+  in the browser's default sans-serif since the first deploy. Fixed.
+- **Footer and mobile bottom nav didn't exist.** This is why the user
+  couldn't find FAQ on a phone — `.desktop-nav` hides below 650px (ported
+  CSS) and nothing replaced it. Both added now.
+- **Seat-input snapping was inconsistent.** Only the +/- stepper buttons
+  correctly enforced "0 or >=4" — the slider, the number box's native
+  spinner/typing, all let 1/2/3 through. Fixed per spec: stepper/wheel/slider
+  snap immediately and directionally; direct typing snaps on blur only
+  (unconditionally to 4), so typing "12" doesn't get corrected after the
+  first keystroke. Verified in isolation against all required cases.
+
+**Flagged, not changed** — two deliberate conflicts between
+DESIGN_GUIDELINES.md and later decisions, left as-is:
+- Guidelines call for a real/generated hero photo; the approved prototype
+  used an SVG illustration instead — prototype wins per the doc's own
+  precedence rule.
+- Guidelines describe a 3-method auth entry (Google + email/password + SMS);
+  PRD decisions dropped email/password. Kept dropped.
+- One live conflict surfaced but resolved in the user's favor: the doc says
+  a dragged slider landing on 1-3 should always commit to 4 (not
+  directional); the user explicitly asked for "same as plus/minus"
+  (directional) just now — implemented that, doc is now the stale one here.
+
+Also re-sorted the seed data to Hebrew alphabetical order (not yet re-seeded
+into production — needs another one-time key, same pattern as before).
