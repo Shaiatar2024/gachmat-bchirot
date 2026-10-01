@@ -75,7 +75,8 @@ async function main() {
     defaultBonusPoints: 5,
     rarityThresholdPct: 20,
     perfectBonusPoints: 50,
-  });
+    locked: false,
+  }, { merge: true });
   await batch.commit();
   console.log(`Seeded ${PARTIES.length} parties, ${BONUS_QUESTIONS.length} bonus questions, config/system.`);
 }

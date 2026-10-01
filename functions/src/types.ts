@@ -15,6 +15,8 @@ export interface SystemConfig {
   rarityThresholdPct: number;
   /** Bonus added on top when a player matches every party's seat count exactly. */
   perfectBonusPoints: number;
+  /** Admin override: force bets closed right now, independent of betLockAt. */
+  locked: boolean;
 }
 
 export type PartyStatus = 'registered' | 'disqualified-pending-appeal' | 'withdrawn';

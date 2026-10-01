@@ -6,6 +6,8 @@ export interface SystemConfig {
   defaultBonusPoints: number;
   rarityThresholdPct: number;
   perfectBonusPoints: number;
+  /** Admin override: force bets closed right now, independent of betLockAt. */
+  locked: boolean;
 }
 
 export type PartyStatus = 'registered' | 'disqualified-pending-appeal' | 'withdrawn';

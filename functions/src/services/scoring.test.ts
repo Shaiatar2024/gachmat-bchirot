@@ -23,6 +23,7 @@ describe('computeAllScores', () => {
     defaultBonusPoints: 5,
     rarityThresholdPct: 50,
     perfectBonusPoints: 50,
+    locked: false,
   };
   const parties = ['likud', 'yesh'];
   const results: Results = { seats: { likud: 20, yesh: 10 }, bonusAnswers: {}, certifiedAt: 'x' };

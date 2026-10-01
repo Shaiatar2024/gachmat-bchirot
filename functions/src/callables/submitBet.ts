@@ -28,7 +28,7 @@ export const submitBet = onCall<{
 
   const configSnap = await db.doc('config/system').get();
   const config = configSnap.data() as SystemConfig | undefined;
-  if (config && new Date() >= new Date(config.betLockAt)) {
+  if (config && (config.locked || new Date() >= new Date(config.betLockAt))) {
     throw new HttpsError('failed-precondition', 'Betting is locked.');
   }
 

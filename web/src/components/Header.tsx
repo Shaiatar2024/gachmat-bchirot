@@ -43,6 +43,11 @@ export function Header() {
           <NavLink to="/leaderboard" className={({ isActive }) => (isActive ? 'active' : '')}>
             טבלת המובילים
           </NavLink>
+          {profile?.role === 'admin' && (
+            <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active' : '')}>
+              ניהול
+            </NavLink>
+          )}
         </nav>
         <div className="header-actions">
           {user && profile ? (
