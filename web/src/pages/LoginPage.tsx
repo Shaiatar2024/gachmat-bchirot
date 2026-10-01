@@ -2,20 +2,49 @@ import type { ConfirmationResult } from 'firebase/auth';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthProvider';
 
+// Israel-only: players type their number the normal local way (e.g.
+// 0501234567) and we prepend +972 ourselves — asking a non-technical user to
+// type a country code themselves is exactly how the real-world phone
+// sign-in failure happened (Firebase rejects anything that isn't E.164).
+function toIsraeliE164(local: string): string | null {
+  const digits = local.replace(/\D/g, '').replace(/^0+/, '');
+  if (!/^5\d{8}$/.test(digits)) return null; // Israeli mobile: 05X-XXXXXXX
+  return `+972${digits}`;
+}
+
+function IsraelFlag() {
+  // Two overlapping equilateral triangles centered on (9, 6.5) = a clean
+  // hexagram, instead of a hand-drawn star outline that wouldn't look right.
+  return (
+    <svg width="18" height="13" viewBox="0 0 18 13" aria-hidden="true">
+      <rect width="18" height="13" fill="white" stroke="#d1d5db" strokeWidth="0.5" />
+      <rect y="1.5" width="18" height="1.8" fill="#0038b8" />
+      <rect y="9.7" width="18" height="1.8" fill="#0038b8" />
+      <polygon points="9,3.8 11.8,8.3 6.2,8.3" fill="none" stroke="#0038b8" strokeWidth="0.45" />
+      <polygon points="9,9.2 6.2,4.7 11.8,4.7" fill="none" stroke="#0038b8" strokeWidth="0.45" />
+    </svg>
+  );
+}
+
 export function LoginPage() {
   const { signInWithGoogle, startPhoneSignIn, confirmPhoneCode } = useAuth();
-  const [phone, setPhone] = useState('');
+  const [localNumber, setLocalNumber] = useState('');
   const [code, setCode] = useState('');
   const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSendCode() {
     setError(null);
+    const phone = toIsraeliE164(localNumber);
+    if (!phone) {
+      setError('מספר לא תקין — הזינו מספר נייד ישראלי, לדוגמה 0501234567');
+      return;
+    }
     try {
       const result = await startPhoneSignIn(phone, 'recaptcha-container');
       setConfirmation(result);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'שליחת הקוד נכשלה');
+    } catch {
+      setError('שליחת הקוד נכשלה, נסו שוב');
     }
   }
 
@@ -51,14 +80,20 @@ export function LoginPage() {
 
       {!confirmation ? (
         <div className="flex flex-col gap-2">
-          <input
-            type="tel"
-            dir="ltr"
-            placeholder="+972501234567"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="rounded-lg border border-border px-3 py-2 text-center"
-          />
+          <div className="flex items-stretch overflow-hidden rounded-lg border border-border" dir="ltr">
+            <span className="flex items-center gap-1.5 border-l border-border bg-muted px-3 text-sm text-muted-foreground">
+              <IsraelFlag />+972
+            </span>
+            <input
+              type="tel"
+              inputMode="numeric"
+              dir="ltr"
+              placeholder="050-1234567"
+              value={localNumber}
+              onChange={(e) => setLocalNumber(e.target.value)}
+              className="flex-1 px-3 py-2 text-center"
+            />
+          </div>
           <button
             onClick={() => void handleSendCode()}
             className="rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground"
