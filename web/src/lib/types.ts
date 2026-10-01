@@ -63,3 +63,10 @@ export interface CrowdAverage {
   sampleSize: number;
   updatedAt: string;
 }
+
+export interface Results {
+  /** partyId -> certified mandate count. Sums to 120. */
+  seats: Record<string, number>;
+  bonusAnswers: Record<string, string | number>;
+  certifiedAt: string;
+}
