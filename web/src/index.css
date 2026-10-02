@@ -388,6 +388,11 @@
     .mobile-nav{display:block;}
     .container{padding-inline:18px;}
     .page{padding-bottom:120px;}
+    /* HomePage's <main> deliberately isn't .page (that adds a 45px top
+       padding that would break the flush full-bleed hero) — but it still
+       needs the same bottom clearance, or the fixed mobile-nav bar sits
+       directly on top of the hero's CTA button. */
+    .home-page{padding-bottom:120px;}
     .hero-content h1{font-size:34px;}
     .hero-content p{font-size:16px;}
     .hero{align-items:flex-end;}

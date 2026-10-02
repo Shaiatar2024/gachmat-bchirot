@@ -66,7 +66,7 @@ export function HomePage() {
   const days = daysUntil(lockDate);
 
   return (
-    <main>
+    <main className="home-page">
       {/* Structure/classes/behavior per CLAUDE-HERO-IMPLEMENTATION.md — keep
           in sync with that doc if this section changes again. */}
       <section className="home-hero">
